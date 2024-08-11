@@ -1,5 +1,5 @@
-const Classroom = require("../models/classroom");
-const User = require("../models/user");
+const Classroom = require("../models/Classroom.js");
+const User = require("../models/User.js");
 
 exports.createClassroom = async (req, res) => {
     
