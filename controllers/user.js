@@ -69,11 +69,15 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, role } = req.body;
 
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: 'Invalid email or password' });
+        }
+
+        if (user.role !="Principal" && user.role !== role) {
+            return res.status(400).json({ message: 'A user already exists with a different role' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
