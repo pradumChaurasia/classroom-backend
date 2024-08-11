@@ -74,8 +74,8 @@ exports.addStudents = async (req, res) => {
 exports.getAllClassrooms = async (req, res) => {
     try {
         const classrooms = await Classroom.find()
-            .populate('teacher', 'name email') 
-            .populate('students', 'name email'); 
+            .populate('teacher', 'name email phoneNumber') 
+            .populate('students', 'name email phoneNumber rollNumber'); 
 
         res.status(200).json({ classrooms });
     } catch (error) {
@@ -86,7 +86,7 @@ exports.getAllClassrooms = async (req, res) => {
 exports.getStudentDetails = async (req,res)=>{
     try {
         const studentId = req.params.studentId;
-        const student = await User.findById(studentId).select('name email');
+        const student = await User.findById(studentId).select('name email phoneNumber rollNumber');
         const classrooms = await Classroom.find({ students: studentId }).select('name');
 
         if (!student) {
@@ -173,8 +173,8 @@ exports.getStudentInvolveClassroom = async(req,res)=>{
         const { studentId } = req.params;
 
         const classrooms = await Classroom.find({ students: studentId })
-            .populate('teacher', 'name email')
-            .populate('students', 'name email');
+            .populate('teacher', 'name email phoneNumber')
+            .populate('students', 'name email phoneNumber rollNumber');
 
         if (!classrooms || classrooms.length === 0) {
             return res.status(404).json({ message: "No classrooms found for this student" });

@@ -6,21 +6,21 @@ exports.createPrincipal = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
 
-        // Check if the Principal account already exists
+        
         let principal = await User.findOne({ email });
         if (principal) {
             return res.status(400).json({ message: 'Principal account already exists' });
         }
 
-        // Ensure the role is 'Principal'
+        
         if (role !== 'Principal') {
             return res.status(400).json({ message: 'Role must be Principal' });
         }
 
-        // Hash the password before saving
+        
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        // Create the Principal account
+        
         const newPrincipal = await User.create({ name, email, password: hashedPassword, role });
 
         res.status(201).json({ message: 'Principal account created successfully', newPrincipal });
@@ -31,9 +31,8 @@ exports.createPrincipal = async (req, res) => {
 
 exports.register = async (req, res) => {
     try {
-        const { name, email, password, role, creatorEmail } = req.body;
-
-        // Check if the user trying to create a new account exists
+        const { name, email, password,rollNumber,phoneNumber, role, creatorEmail } = req.body;
+        
         const creator = await User.findOne({ email: creatorEmail });
         if (!creator) {
             return res.status(400).json({ message: 'Invalid creator credentials' });
@@ -58,7 +57,7 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 12);
 
         // Create a new user
-        const newUser = await User.create({ name, email, password: hashedPassword, role });
+        const newUser = await User.create({ name, email, password: hashedPassword, role,rollNumber,phoneNumber });
 
         res.status(201).json({ message: "User created successfully" });
     }
@@ -98,7 +97,6 @@ exports.getUsers = async(req,res)=>{
         const teachers = await User.find({ role: 'Teacher' });
         const students = await User.find({ role: 'Student' });
 
-        // Check if there are no teachers or students
         const message = {};
         if (teachers.length === 0) {
             message.teachers = 'No teachers available';
@@ -107,7 +105,6 @@ exports.getUsers = async(req,res)=>{
             message.students = 'No students available';
         }
 
-        // If both are empty, return a specific message
         if (teachers.length === 0 && students.length === 0) {
             return res.status(200).json({ message: 'No teachers or students available' });
         }
@@ -121,11 +118,10 @@ exports.getUsers = async(req,res)=>{
 exports.updateUser = async(req,res)=>{
     try{
         const { id } = req.params;
-        const { name, email } = req.body;
-
+        const { name, email , rollNumber, phoneNumber} = req.body;
         const updatedUser = await User.findByIdAndUpdate(
             id,
-            { name, email },
+            { name, email,rollNumber, phoneNumber },
             { new: true }
         );
 

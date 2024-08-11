@@ -15,6 +15,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    rollNumber:{
+        type:String
+    },
+    phoneNumber:{
+        type: String,
+    },
     role: {
         type: String,
         enum: ['Principal', 'Teacher', 'Student'],
