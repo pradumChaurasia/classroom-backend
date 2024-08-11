@@ -8,9 +8,9 @@ const app= express()
 dotenv.config();
 connectDB();
 app.use(cors({
-    origin:"*"
-}))
-
+  origin: '*', 
+  credentials: true
+}));
 app.use(express.json())
 
 const PORT = process.env.PORT || 3000;
